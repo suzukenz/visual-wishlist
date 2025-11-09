@@ -1,3 +1,14 @@
+## Development Workflow
+
+実装完了後、以下のコマンドを**必ず実行**し、すべてのチェックに合格すること：
+
+```bash
+pnpm run typecheck  # TypeScriptの型チェック
+pnpm run lint       # ESLintによる静的解析
+```
+
+すべての警告はエラーとして扱い、解決してからコミットすること。
+
 ## Implementation Policies
 
 ### React useEffect Policy

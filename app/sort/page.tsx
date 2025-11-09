@@ -11,7 +11,6 @@ import {
 } from '@dnd-kit/core'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { SortableItem } from './sortable-item'
-import { ViewSwitcher } from '@/app/components/view-switcher'
 import type { Picture } from '@/lib/types'
 
 /**
@@ -180,8 +179,6 @@ export default function SortPage(): React.JSX.Element {
           </div>
         )}
       </div>
-
-      <ViewSwitcher />
     </div>
   )
 }

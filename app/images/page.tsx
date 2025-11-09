@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { ViewSwitcher } from '@/app/components/view-switcher'
 import type { Picture } from '@/lib/types'
 
 /**
@@ -73,8 +72,6 @@ export default async function ImagesPage(): Promise<React.JSX.Element> {
           </p>
         </div>
       </div>
-
-      <ViewSwitcher />
     </div>
   )
 }
