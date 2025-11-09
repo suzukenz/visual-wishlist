@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Development Standards
+
+このプロジェクトは、明確な開発原則に基づいて構築されています。詳細は [Project Constitution](.specify/memory/constitution.md) を参照してください。
+
+### 重要な開発ルール
+
+実装完了後は、必ず以下のチェックを実行してください:
+
+```bash
+pnpm run typecheck  # 型チェック
+pnpm run lint       # 静的解析
+```
+
+すべてのチェックに合格してからコミットしてください。
+
 ## Getting Started
 
 First, run the development server:

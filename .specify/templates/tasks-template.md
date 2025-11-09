@@ -157,6 +157,16 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
 
+### Constitution Compliance (REQUIRED)
+
+**Purpose**: Verify all implementations comply with project constitution
+
+- [ ] TXXX Run `pnpm run typecheck` and fix all type errors
+- [ ] TXXX Run `pnpm run lint` and fix all linting errors
+- [ ] TXXX Review all `useEffect` usage for external system synchronization only
+- [ ] TXXX Verify no `any` types remain in the codebase
+- [ ] TXXX Ensure all functions have explicit type annotations
+
 ---
 
 ## Dependencies & Execution Order

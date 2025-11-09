@@ -31,7 +31,30 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+このセクションでは、実装が`.specify/memory/constitution.md`で定義された原則に準拠しているかを確認します。
+
+### Principle 1: Type Safety & Code Quality
+
+- [ ] すべての実装後に`pnpm run typecheck`を実行し、型エラーがないことを確認
+- [ ] すべての実装後に`pnpm run lint`を実行し、静的解析エラーがないことを確認
+- [ ] `any`型の使用を避け、明示的な型定義を使用
+- [ ] 関数の引数と戻り値に型アノテーションを明示
+
+### Principle 2: Minimal Implementation
+
+- [ ] YAGNI原則に従い、必要最小限の機能のみを実装
+- [ ] 新しいデザインパターンやアーキテクチャパターンの導入には明確な理由を文書化
+- [ ] 新しい依存関係の追加は、既存手段で解決できないことを確認
+- [ ] コードの重複が3回以上発生した場合にのみ抽象化を検討
+
+### Principle 3: React useEffect Discipline
+
+- [ ] `useEffect`の使用が外部システムとの同期に限定されていることを確認
+- [ ] すべての`useEffect`に同期対象の外部リソースを説明するコメントを追加
+- [ ] propsや派生値をローカルstateにコピーする`useEffect`がないことを確認
+- [ ] ユーザーアクションの処理がイベントハンドラで行われることを確認
+
+**違反がある場合**: "Complexity Tracking"セクションで正当化すること
 
 ## Project Structure
 
