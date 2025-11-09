@@ -17,17 +17,17 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - おもちゃ画像の準備と表示 (Priority: P1)
+### User Story 1 - 画像の準備と表示 (Priority: P1)
 
-親が指定フォルダにおもちゃの画像を格納し、アプリで画像一覧を確認できる。これによりスマートフォンで並び替える対象のおもちゃリストを準備する。
+親が指定フォルダに画像を格納し、アプリで画像一覧を確認できる。これによりスマートフォンで並び替える対象の画像リストを準備する。
 
-**Why this priority**: 並び替える前提として、おもちゃ画像の準備が必須。このストーリーがなければアプリは何も表示できない。
+**Why this priority**: 並び替える前提として、画像の準備が必須。このストーリーがなければアプリは何も表示できない。
 
 **Independent Test**: 指定フォルダに画像ファイルを配置し、PC上でアプリにアクセスして画像一覧が表示されることで独立してテスト可能。並び替え機能がなくても、画像表示機能単体で価値を提供する。
 
 **Acceptance Scenarios**:
 
-1. **Given** 指定フォルダにおもちゃ画像(jpg/png)を配置している、**When** PC上でアプリを開く、**Then** フォルダ内のすべての画像がサムネイルで一覧表示される
+1. **Given** 指定フォルダに画像(jpg/png)を配置している、**When** PC上でアプリを開く、**Then** フォルダ内のすべての画像がサムネイルで一覧表示される
 2. **Given** アプリを開いている、**When** 指定フォルダに新しい画像を追加する、**Then** アプリを更新すると新しい画像が一覧に表示される
 3. **Given** アプリを開いている、**When** 指定フォルダから画像を削除する、**Then** アプリを更新するとその画像が一覧から消える
 
@@ -35,7 +35,7 @@
 
 ### User Story 2 - スマートフォンでの並び替え (Priority: P2)
 
-親と子供が一緒にスマートフォン上でおもちゃ画像を上下にドラッグ&ドロップして並び替え、欲しいおもちゃの優先順位を決める。
+親と子供が一緒にスマートフォン上で画像を上下にドラッグ&ドロップして並び替え、優先順位を決める。
 
 **Why this priority**: 並び替え機能はアプリの主要価値。ただし、画像データがなければ並び替えできないため、P1の後に実装。
 
@@ -43,10 +43,10 @@
 
 **Acceptance Scenarios**:
 
-1. **Given** 指定フォルダに複数のおもちゃ画像が配置されている、**When** スマートフォンでアプリにアクセスする、**Then** おもちゃ画像が縦一列に表示される
-2. **Given** おもちゃ画像が表示されている、**When** ある画像を指でタッチして上または下にドラッグする、**Then** 画像がドラッグした位置に移動する
+1. **Given** 指定フォルダに複数の画像が配置されている、**When** スマートフォンでアプリにアクセスする、**Then** 画像が縦一列に表示される
+2. **Given** 画像が表示されている、**When** ある画像を指でタッチして上または下にドラッグする、**Then** 画像がドラッグした位置に移動する
 3. **Given** 画像の順序を変更した、**When** 画面を離れて再度アプリを開く、**Then** 変更した順序が保持されている
-4. **Given** おもちゃ画像が表示されている、**When** 最上位の画像を一番下に移動する、**Then** 他の画像の順序が適切に更新される
+4. **Given** 画像が表示されている、**When** 最上位の画像を一番下に移動する、**Then** 他の画像の順序が適切に更新される
 
 ---
 
@@ -64,14 +64,14 @@
 
 ### Functional Requirements
 
-- **FR-001**: System MUST read toy images (jpg, png, gif, webp formats) from a designated folder on the PC
+- **FR-001**: System MUST read images (jpg, png, gif, webp formats) from a designated folder on the PC
 - **FR-002**: System MUST automatically detect and load all image files from the designated folder
-- **FR-003**: System MUST display all detected toy images as thumbnails in a list view on PC
+- **FR-003**: System MUST display all detected images as thumbnails in a list view on PC
 - **FR-004**: System MUST reflect changes when images are added to or removed from the designated folder (after page refresh)
 - **FR-005**: System MUST serve the application over the local network so a smartphone can access it
-- **FR-006**: System MUST display toy images in a vertical list on the smartphone
-- **FR-007**: System MUST allow users to drag and drop toy images up and down on the smartphone to reorder them
-- **FR-008**: System MUST persist the order of toy images after reordering
+- **FR-006**: System MUST display images in a vertical list on the smartphone
+- **FR-007**: System MUST allow users to drag and drop images up and down on the smartphone to reorder them
+- **FR-008**: System MUST persist the order of images after reordering
 - **FR-009**: System MUST handle scenarios where no images exist in the designated folder (display appropriate message)
 - **FR-010**: System MUST ignore non-image files in the designated folder
 - **FR-011**: System MUST maintain image order persistence even after application restart
@@ -79,13 +79,13 @@
 
 ### Key Entities
 
-- **Toy Image**: Represents a single toy photo from the designated folder
+- **Picture**: Represents a single image from the designated folder
   - Unique identifier (filename from the designated folder)
   - Image file path (located in the designated folder on PC)
   - Display order/priority (integer value indicating position in the list)
 
-- **Image List**: Represents the ordered collection of all toy images
-  - Contains all toy images with their current order
+- **Picture List**: Represents the ordered collection of all pictures
+  - Contains all pictures with their current order
   - Accessible from both PC and smartphone via local network
   - Order data persisted separately to PC local storage (e.g., JSON file)
 
@@ -93,12 +93,12 @@
 
 ### Measurable Outcomes
 
-- **SC-001**: 親が指定フォルダにおもちゃ画像5枚を配置し、1分以内にスマートフォンで確認できる
-- **SC-002**: 3歳児が親のサポートを受けながら、5枚のおもちゃ画像の順序を1分以内で並び替えられる
+- **SC-001**: 親が指定フォルダに画像5枚を配置し、1分以内にスマートフォンで確認できる
+- **SC-002**: 3歳児が親のサポートを受けながら、5枚の画像の順序を1分以内で並び替えられる
 - **SC-003**: 並び替えた順序がアプリ再起動後も100%保持される
 - **SC-004**: スマートフォンでの画像のドラッグ&ドロップ操作が1秒以内に完了し、視覚的フィードバックが即座に表示される
 - **SC-005**: 指定フォルダ内の画像読み込みから表示までが5秒以内に完了する(画像50枚、各5MB以下の場合)
-- **SC-006**: 親と子供がアプリを使用して、「欲しいおもちゃの優先順位」についての会話を促進できる(質的評価)
+- **SC-006**: 親と子供がアプリを使用して、優先順位についての会話を促進できる(質的評価)
 
 ## Assumptions
 

@@ -19,3 +19,12 @@ Principles
 2. Handle user actions in event handlers, not in effects.
 3. Keep effects only for real side effects that touch external systems.
 4. Whenever you write a useEffect, add a short comment explaining what external resource it synchronizes with.
+
+## Active Technologies
+
+- TypeScript 5, Node.js (Next.js 16.0.1が要求) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 4 (001-toy-priority-sorting)
+- ファイルシステム(画像ファイル + JSONファイルで順序管理) (001-toy-priority-sorting)
+
+## Recent Changes
+
+- 001-toy-priority-sorting: Added TypeScript 5, Node.js (Next.js 16.0.1が要求) + Next.js 16.0.1, React 19.2.0, Tailwind CSS 4
