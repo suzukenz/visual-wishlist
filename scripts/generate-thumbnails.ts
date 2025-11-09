@@ -6,7 +6,9 @@ import { join } from 'path'
  * サムネイル生成スクリプト
  *
  * public/pictures/内の画像ファイルをスキャンし、
- * public/pictures/thumbnails/に200x200のサムネイルを生成します。
+ * public/pictures/thumbnails/に高画質なサムネイルを生成します。
+ *
+ * サムネイルサイズ: 800x800 (高画質優先)
  *
  * 実行方法:
  * pnpm run generate-thumbnails
@@ -49,16 +51,56 @@ async function generateThumbnails(): Promise<void> {
         const outputPath = join(thumbDir, file)
 
         try {
-          await sharp(inputPath)
-            .resize(200, 200, {
-              fit: 'cover',
-              position: 'center',
-            })
-            .jpeg({
-              quality: 80,
-              mozjpeg: true,
-            })
-            .toFile(outputPath)
+          const ext = file.toLowerCase().substring(file.lastIndexOf('.'))
+          const resized = sharp(inputPath).resize(800, 800, {
+            fit: 'cover',
+            position: 'center',
+            kernel: sharp.kernel.lanczos3, // 高品質なリサイズアルゴリズム
+          })
+
+          // 元の画像形式に応じて適切なフォーマットで出力
+          // 画質を最優先に設定
+          switch (ext) {
+            case '.png':
+              await resized
+                .png({
+                  quality: 100,
+                  compressionLevel: 6, // 圧縮レベルを下げて画質優先
+                  palette: false, // パレット圧縮を無効化して画質優先
+                })
+                .toFile(outputPath)
+              break
+            case '.webp':
+              await resized
+                .webp({
+                  quality: 95, // 高画質設定
+                  lossless: false,
+                  nearLossless: false,
+                })
+                .toFile(outputPath)
+              break
+            case '.gif':
+              // GIFは静止画として最初のフレームをPNGに変換
+              await resized
+                .png({
+                  quality: 100,
+                  compressionLevel: 6,
+                  palette: false,
+                })
+                .toFile(outputPath.replace(/\.gif$/i, '.png'))
+              break
+            case '.jpg':
+            case '.jpeg':
+            default:
+              await resized
+                .jpeg({
+                  quality: 95, // 高画質設定
+                  mozjpeg: true,
+                  chromaSubsampling: '4:4:4', // 色情報の間引きを最小化
+                })
+                .toFile(outputPath)
+              break
+          }
 
           console.log(`✓ Generated: ${file}`)
         } catch (error) {

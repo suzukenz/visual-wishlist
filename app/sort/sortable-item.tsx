@@ -41,12 +41,12 @@ export function SortableItem({ id, picture, index }: SortableItemProps): React.J
       }`}
     >
       {/* 画像をメインに配置 (縦横比を2:1に変更) */}
-      <div className="relative w-full aspect-[2/1]">
+      <div className="relative w-full aspect-[2/1] bg-gray-100">
         <Image
           src={picture.thumbnailPath}
           alt={picture.filename}
           fill
-          className="object-cover pointer-events-none select-none"
+          className="object-contain pointer-events-none select-none"
           sizes="100vw"
           draggable={false}
         />

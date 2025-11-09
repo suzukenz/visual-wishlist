@@ -45,11 +45,13 @@ next-env.d.ts
 .claude/
 
 # Picture Priority Sorting App
-# Thumbnails (generated at build time)
-public/pictures/thumbnails/
+# Pictures directory (user-uploaded images)
+public/pictures/*
+!public/pictures/.gitkeep
 
 # Order data (user-specific)
-data/order.json
+data/*
+!data/.gitkeep
 
 # Playwright test results
 playwright-report/

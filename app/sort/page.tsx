@@ -133,22 +133,22 @@ export default function SortPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-2">
+    <div className="min-h-screen bg-gray-50 px-12 py-2">
       <div className="max-w-2xl mx-auto">
         {/* ヘッダー: コンパクトに */}
-        <div className="mb-3 px-2">
+        <div className="mb-3">
           <h1 className="text-lg font-bold text-gray-900">画像の並び替え</h1>
         </div>
 
         {/* エラー・保存中表示 */}
         {error && (
-          <div className="mb-2 mx-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <div className="mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-sm text-red-800">{error}</p>
           </div>
         )}
 
         {saving && (
-          <div className="mb-2 mx-2 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center">
+          <div className="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
             <p className="text-sm text-blue-800">保存中...</p>
           </div>
@@ -163,7 +163,7 @@ export default function SortPage(): React.JSX.Element {
             items={pictures.map((p) => p.filename)}
             strategy={verticalListSortingStrategy}
           >
-            {/* 画像リスト: 余白を最小限に */}
+            {/* 画像リスト: 左右に余白を確保してスクロール可能に */}
             <div className="space-y-2">
               {pictures.map((picture, index) => (
                 <SortableItem key={picture.filename} id={picture.filename} picture={picture} index={index} />
@@ -173,7 +173,7 @@ export default function SortPage(): React.JSX.Element {
         </DndContext>
 
         {pictures.length === 1 && (
-          <div className="mt-4 mx-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
             <p className="text-sm text-yellow-800">
               画像が1枚のみです。並び替えはできません。
             </p>

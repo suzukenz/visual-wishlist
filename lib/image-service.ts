@@ -104,6 +104,21 @@ export async function getImageMetadata(
 }
 
 /**
+ * サムネイルのファイル名を取得
+ * GIFファイルの場合はPNGに変換される
+ *
+ * @param filename - 元のファイル名
+ * @returns サムネイルのファイル名
+ */
+function getThumbnailFilename(filename: string): string {
+  const ext = filename.toLowerCase().substring(filename.lastIndexOf('.'))
+  if (ext === '.gif') {
+    return filename.replace(/\.gif$/i, '.png')
+  }
+  return filename
+}
+
+/**
  * すべての画像をPictureエンティティの配列として取得
  * (順序適用前のデフォルト状態)
  *
@@ -115,11 +130,12 @@ export async function getAllImagesWithoutOrder(): Promise<Picture[]> {
   const pictures: Picture[] = await Promise.all(
     filenames.map(async (filename, index) => {
       const metadata = await getImageMetadata(filename)
+      const thumbnailFilename = getThumbnailFilename(filename)
 
       return {
         filename,
         path: `/pictures/${filename}`,
-        thumbnailPath: `/pictures/thumbnails/${filename}`,
+        thumbnailPath: `/pictures/thumbnails/${thumbnailFilename}`,
         order: index,
         metadata,
       }
