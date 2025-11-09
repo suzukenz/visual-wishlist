@@ -40,6 +40,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Some agents may store credentials, auth tokens, or other identifying and private artifacts in the agent folder within your project. 
+# Some agents may store credentials, auth tokens, or other identifying and private artifacts in the agent folder within your project.
 # Consider adding .claude/ (or parts of it) to .gitignore to prevent accidental credential leakage.
 .claude/
+
+# Picture Priority Sorting App
+# Pictures directory (user-uploaded images)
+public/pictures/*
+!public/pictures/.gitkeep
+
+# Order data (user-specific)
+data/*
+!data/.gitkeep
+
+# Playwright test results
+playwright-report/
+test-results/

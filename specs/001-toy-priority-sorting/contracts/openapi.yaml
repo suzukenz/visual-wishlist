@@ -1,0 +1,299 @@
+openapi: 3.1.0
+info:
+  title: Picture Priority Sorting API
+  description: |
+    画像優先度ソートアプリのAPI仕様
+
+    ローカルネットワーク内でPCとスマートフォン間で画像画像の順序を管理するためのREST API
+  version: 1.0.0
+  contact:
+    name: visual-wishlist
+
+servers:
+  - url: http://localhost:3000
+    description: ローカル開発環境
+  - url: http://192.168.1.100:3000
+    description: ローカルネットワーク(例)
+
+tags:
+  - name: images
+    description: 画像管理エンドポイント
+  - name: order
+    description: 順序管理エンドポイント
+
+paths:
+  /api/images:
+    get:
+      summary: 画像一覧取得
+      description: |
+        public/pictures/フォルダ内のすべての画像画像を取得します。
+
+        処理内容:
+        1. public/pictures/フォルダをスキャン
+        2. data/order.jsonから順序情報を読み込み
+        3. 新規画像を検出し、デフォルト順序で追加
+        4. 削除された画像を除外
+        5. 順序でソートして返却
+      operationId: getImages
+      tags:
+        - images
+      responses:
+        '200':
+          description: 画像一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Picture'
+              examples:
+                success:
+                  summary: 正常な応答例
+                  value:
+                    - filename: picture-car.jpg
+                      path: /pictures/picture-car.jpg
+                      thumbnailPath: /pictures/thumbnails/picture-car.jpg
+                      order: 0
+                      metadata:
+                        size: 2048576
+                        mimeType: image/jpeg
+                        lastModified: '2025-11-09T10:00:00.000Z'
+                    - filename: teddy-bear.png
+                      path: /pictures/teddy-bear.png
+                      thumbnailPath: /pictures/thumbnails/teddy-bear.png
+                      order: 1
+                      metadata:
+                        size: 1536000
+                        mimeType: image/png
+                        lastModified: '2025-11-09T10:15:00.000Z'
+                empty:
+                  summary: 画像が0枚の場合
+                  value: []
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                serverError:
+                  summary: フォルダアクセスエラー
+                  value:
+                    error: Failed to read images directory
+                    message: public/pictures/ directory not found
+
+  /api/order:
+    get:
+      summary: 現在の順序情報取得
+      description: |
+        data/order.jsonから現在の画像順序情報を取得します。
+
+        ファイルが存在しない場合は、デフォルト順序で新規作成します。
+      operationId: getOrder
+      tags:
+        - order
+      responses:
+        '200':
+          description: 順序情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PictureOrder'
+              examples:
+                success:
+                  summary: 正常な応答例
+                  value:
+                    version: '1.0.0'
+                    lastUpdated: '2025-11-09T12:34:56.789Z'
+                    pictures:
+                      - filename: picture-car.jpg
+                        path: /pictures/picture-car.jpg
+                        thumbnailPath: /pictures/thumbnails/picture-car.jpg
+                        order: 0
+                      - filename: teddy-bear.png
+                        path: /pictures/teddy-bear.png
+                        thumbnailPath: /pictures/thumbnails/teddy-bear.png
+                        order: 1
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: 順序更新
+      description: |
+        画像の並び順を更新し、data/order.jsonに保存します。
+
+        処理内容:
+        1. リクエストボディからファイル名配列を取得
+        2. 既存の画像情報とマージ
+        3. 新しいorder値を割り当て
+        4. data/order.jsonに保存
+        5. 更新後のImageOrderを返却
+      operationId: updateOrder
+      tags:
+        - order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderRequest'
+            examples:
+              reorder:
+                summary: 並び替え例
+                description: 2つの画像の順序を入れ替える
+                value:
+                  filenames:
+                    - teddy-bear.png
+                    - picture-car.jpg
+      responses:
+        '200':
+          description: 順序更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PictureOrder'
+              examples:
+                success:
+                  summary: 更新後の順序
+                  value:
+                    version: '1.0.0'
+                    lastUpdated: '2025-11-09T13:00:00.000Z'
+                    pictures:
+                      - filename: teddy-bear.png
+                        path: /pictures/teddy-bear.png
+                        thumbnailPath: /pictures/thumbnails/teddy-bear.png
+                        order: 0
+                      - filename: picture-car.jpg
+                        path: /pictures/picture-car.jpg
+                        thumbnailPath: /pictures/thumbnails/picture-car.jpg
+                        order: 1
+        '400':
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidFilenames:
+                  summary: ファイル名が不正
+                  value:
+                    error: Invalid filenames
+                    message: One or more filenames do not exist
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Picture:
+      type: object
+      required:
+        - filename
+        - path
+        - thumbnailPath
+        - order
+      properties:
+        filename:
+          type: string
+          description: 画像ファイル名(ユニークID)
+          example: picture-car.jpg
+        path:
+          type: string
+          description: オリジナル画像の相対パス
+          example: /pictures/picture-car.jpg
+        thumbnailPath:
+          type: string
+          description: サムネイル画像の相対パス
+          example: /pictures/thumbnails/picture-car.jpg
+        order:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 表示順序(0から開始、小さいほど上位)
+          example: 0
+        metadata:
+          type: object
+          description: 画像のメタデータ(オプション)
+          properties:
+            size:
+              type: integer
+              format: int64
+              description: ファイルサイズ(バイト)
+              example: 2048576
+            mimeType:
+              type: string
+              description: MIMEタイプ
+              example: image/jpeg
+              enum:
+                - image/jpeg
+                - image/png
+                - image/gif
+                - image/webp
+            lastModified:
+              type: string
+              format: date-time
+              description: 最終更新日時(ISO 8601)
+              example: '2025-11-09T10:00:00.000Z'
+
+    PictureOrder:
+      type: object
+      required:
+        - version
+        - lastUpdated
+        - images
+      properties:
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+          description: データフォーマットバージョン(セマンティックバージョニング)
+          example: '1.0.0'
+        lastUpdated:
+          type: string
+          format: date-time
+          description: 最終更新日時(ISO 8601)
+          example: '2025-11-09T12:34:56.789Z'
+        pictures:
+          type: array
+          description: 順序付けられた画像配列
+          items:
+            $ref: '#/components/schemas/PictureImage'
+
+    UpdateOrderRequest:
+      type: object
+      required:
+        - filenames
+      properties:
+        filenames:
+          type: array
+          description: ファイル名の配列(新しい順序)
+          items:
+            type: string
+            example: picture-car.jpg
+          minItems: 0
+          maxItems: 50
+      example:
+        filenames:
+          - picture-car.jpg
+          - teddy-bear.png
+          - robot.jpg
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: エラータイプ
+          example: Invalid request
+        message:
+          type: string
+          description: エラーの詳細メッセージ
+          example: The filenames array must not be empty
